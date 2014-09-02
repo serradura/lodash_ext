@@ -1,7 +1,5 @@
 //http://jsperf.com/isblank2
-(function(root) {
-  var _ = root._;
-
+(function(_) {
   _.mixin({
     isBlank: function( val ) {
       if ( _.isNumber(val) && !_.isNaN(val) ) return false;
@@ -15,4 +13,4 @@
       return !_.isBlank(val);
     }
   });
-})(this);
+})(this._);

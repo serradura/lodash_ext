@@ -1,5 +1,5 @@
 //http://jsperf.com/string-supplant/2
-(function(root) {                            // Mustache like:
+(function(_) {                               // Mustache like:
   _.supplantKeyReplacer  = /%\{([^\}]+)\}/g; // /\{\{([^\}]+)\}\}/g;
   _.supplantListReplacer = /(%\?)/g;         // /(\{\{\?\}\})/g;
   _.supplant = (function(_){
@@ -46,4 +46,4 @@
     return f;
 
   })(_);
-})(this);
+})(this._);
