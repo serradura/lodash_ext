@@ -1,0 +1,28 @@
+{
+  "name": "lodash_ext",
+  "version": "0.1.0",
+  "homepage": "https://github.com/serradura/lodash_ext",
+  "authors": [
+    "Rodrigo Serradura <rodrigo@serraduraseven.com>"
+  ],
+  "description": "Lodash/underscore mixins for easily get/fetch object data properties, string interpolation and more.",
+  "main": "dist/lodash_ext.min.js",
+  "keywords": [
+    "lodash",
+    "mixin",
+    "mixins",
+    "property",
+    "properties",
+    "interpolation"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "vendor"
+  ]
+}
