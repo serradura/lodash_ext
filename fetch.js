@@ -3,7 +3,7 @@
     return /^f|^o/.test(typeof object);
   };
 
-  function getObject(object, parts) {
+  function getData(object, parts) {
     var length  = parts.length,
         current = object,
         container, property, i;
@@ -32,12 +32,12 @@
   function get(object, query) {
     var queryParts = init(object, query, 'get');
 
-    return getObject(object, queryParts);
+    return getData(object, queryParts);
   };
 
   function fetch(object, query, defaultData) {
     var queryParts = init(object, query, 'fetch'),
-        data       = getObject(object, queryParts);
+        data       = getData(object, queryParts);
 
     if(!data && !defaultData) {
       throw '_.fetch: key not found: ' + query;
