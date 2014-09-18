@@ -1,5 +1,39 @@
 (function(_) {
   (function(_) {
+    var validationErrorFor = {
+          mixin:  '_.includeIn: all mixins must be objects.',
+          object: '_.includeIn: target must be a constuctor or an object.'
+        },
+
+        withA = function(errorType, object) {
+          if( !_.isObject(object) ) throw validationErrorFor[errorType];
+
+          return object;
+        },
+
+        withAn = withA;
+
+    function appendAll(mixins, object) {
+      _.each(mixins, function(mixin) {
+        _.extend(object, withA('mixin', mixin));
+      });
+    };
+
+    function includeIn(target, mixin) {
+      var mixins = _.isArray(mixin) ? mixin : [mixin],
+          object = withAn('object', target.prototype || target);
+
+      appendAll(mixins, object);
+
+      return target;
+    };
+
+    _.mixin({
+      includeIn: includeIn
+    });
+  })(_);
+
+  (function(_) {
     function validateObjectsWith(fn, val) {
       if ( _.isString(val) || (_.isArray(val) || fn(val)) ) return _.isEmpty(val);
     }
