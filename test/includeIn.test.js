@@ -1,5 +1,7 @@
 (function () {
 
+  /*###############################################################################################*/
+
   function testPersonModule(person, assert) {
     assert.ok( person.isPersonModule, true );
 
@@ -11,6 +13,11 @@
     testPersonModule(person, assert)
 
     assert.strictEqual( person.foo, 'foo' );
+  };
+
+  function testExtendInPerson(Person, assert) {
+    assert.strictEqual( Person.bar  , 'bar' );
+    assert.strictEqual( Person.foo(), 'foo' );
   };
 
   function beforeEach() {
@@ -25,6 +32,7 @@
       return new Person(name || this.defaultName);
     };
 
+    this.BarModule    = { bar: 'bar', foo: function() { return 'foo' } };
     this.PersonModule = {
       isPersonModule: true,
 
@@ -39,11 +47,11 @@
     this.personObject = undefined;
     this.Person       = undefined;
     this.buildPerson  = undefined;
-
-    this.PersonModule = undefined;
   };
 
+
   /*###############################################################################################*/
+
 
   QUnit.module( '_.includeIn', {
     setup:    beforeEach,
@@ -112,5 +120,61 @@
       '_.includeIn: all mixins must be objects.'
     );
   });
+
+
+  /*###############################################################################################*/
+
+
+  QUnit.module( '_.extendIn', {
+    setup:    beforeEach,
+    teardown: afterEach
+  });
+
+  QUnit.test( 'should include module properties inside of target constructor', function( assert ) {
+    _.extendIn(this.Person, this.BarModule);
+
+    testExtendInPerson(this.Person, assert);
+  });
+
+  QUnit.test( 'should include all module properties inside of target constructor', function( assert ) {
+    _.extendIn(this.Person, [this.BarModule, {baz: 'baz'}]);
+
+    testExtendInPerson(this.Person, assert);
+
+    assert.strictEqual( this.Person.baz, 'baz' );
+  });
+
+  QUnit.test( 'should throws an error when the target is not a function', function( assert ) {
+
+    _.each([undefined, null, false, 1, "string"], function(target) {
+      assert.throws(
+        function() { _.extendIn(target, this.PersonModule); },
+        '_.extendIn: target must be a function.'
+      );
+    });
+
+  });
+
+  QUnit.test( 'should throws an error when the module is invalid', function( assert ) {
+
+    _.each([undefined, null, false, 1, "string"], function(invalidModule) {
+      assert.throws(
+        function() { _.extendIn(this.Person, invalidModule); },
+        '_.extendIn: all mixins must be objects.'
+      );
+    });
+
+  });
+
+  QUnit.test( 'should throws an error when some module is invalid', function( assert ) {
+    assert.throws(
+      function() {
+        _.extendIn(this.Person, [this.PersonModule, {foo: 'foo'}, 1]);
+      },
+      '_.extendIn: all mixins must be objects.'
+    );
+  });
+
+  /*###############################################################################################*/
 
 })();
