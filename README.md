@@ -26,6 +26,10 @@ lodash.js / underscore.js extensions.
 
     $ npm install grunt-contrib-concat --save-dev
 
-  run grunt to concat and minify
+  run qunit tests (https://github.com/gruntjs/grunt-contrib-qunit)
+
+    $ npm install grunt-contrib-qunit --save-dev
+
+  run grunt to run tests, concat and minify files
 
     $ grunt
