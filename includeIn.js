@@ -1,27 +1,30 @@
 (function(_) {
-  var validationErrors = {
-        fn:     'target must be a function.',
-        mixin:  'all mixins must be objects.',
-        object: 'target must be a constuctor or an object.',
-      },
+  var validations = {
+    fn: {
+      error: 'target must be a function.',
+      strategy: _.isFunction
+    },
+    mixin: {
+      error: 'all mixins must be objects.',
+      strategy: _.isObject
+    },
+    object: {
+      error: 'target must be a constuctor or an object.',
+      strategy: _.isObject
+    }
+  },
 
-      validationStrategies = {
-        fn:     _.isFunction,
-        mixin:  _.isObject,
-        object: _.isObject
-      },
-
-      cbKeys = {
-        include: 'included',
-        extend: 'extended'
-      };
+  cbKeys = {
+    include: 'included',
+    extend: 'extended'
+  };
 
   function validationErrorFor(errorType, strategy) {
-    return '_.' + strategy + 'In: ' + validationErrors[errorType];
+    return '_.' + strategy + 'In: ' + validations[errorType]['error'];
   }
 
-  function valid(errorType, strategy, target) {
-    var isValid = validationStrategies[errorType];
+  function validStrategys(errorType, strategy, target) {
+    var isValid = validations[errorType]['strategy'];
 
     if( !isValid(target) ) throw validationErrorFor(errorType, strategy);
 
@@ -44,7 +47,7 @@
   function mixinsFor(strategy, mixin) {
     var mixins = _.isArray(mixin) ? mixin : [mixin];
 
-    return _.map(mixins, function(mixin) { return valid('mixin', strategy, mixin) });
+    return _.map(mixins, function(mixin) { return validStrategy('mixin', strategy, mixin) });
   };
 
   function handledWith(strategy, target, mixin, object) {
@@ -62,13 +65,13 @@
   };
 
   function extendIn(target, mixin) {
-    valid('fn', 'extend', target);
+    validStrategy('fn', 'extend', target);
 
     return handledWith('extend', target, mixin);
   };
 
   function includeIn(target, mixin) {
-    var object = valid('object', 'include', target.prototype || target);
+    var object = validStrategy('object', 'include', target.prototype || target);
 
     return handledWith('include', target, mixin, object);
   };
