@@ -130,6 +130,31 @@
     assert.deepEqual(this.Person.extendedMixins(), []);
   });
 
+  QUnit.test( 'should execute the included callback when it exists', function( assert ) {
+    var includedCallback = function(name) {
+      return function(target, mixin) {
+        mixin.name = name;
+        target.lastIncludedMixin = mixin.name;
+      }
+    };
+
+    var FooMixin = {
+      foo: 'foo',
+      included: includedCallback('Foo')
+    };
+
+    var BarMixin = {
+      bar: 'bar',
+      included: includedCallback('Bar')
+    };
+
+    _.includeIn(this.Person, [FooMixin, BarMixin]);
+
+    assert.strictEqual( this.Person.lastIncludedMixin, 'Bar' );
+
+    assert.ok( _.all(this.Person.includedMixins(), 'name')  );
+  });
+
   /*###############################################################################################*/
 
 
@@ -190,6 +215,31 @@
 
     assert.deepEqual(this.Person.extendedMixins(), mixins);
     assert.deepEqual(this.Person.includedMixins(), []);
+  });
+
+  QUnit.test( 'should execute the extended callback when it exists', function( assert ) {
+    var extendedCallback = function(name) {
+      return function(target, mixin) {
+        mixin.name = name;
+        target.lastExtendedMixin = mixin.name;
+      }
+    };
+
+    var FooMixin = {
+      foo: 'foo',
+      extended: extendedCallback('Foo')
+    };
+
+    var BarMixin = {
+      bar: 'bar',
+      extended: extendedCallback('Bar')
+    };
+
+    _.extendIn(this.Person, [FooMixin, BarMixin]);
+
+    assert.strictEqual( this.Person.lastExtendedMixin, 'Bar' );
+
+    assert.ok( _.all(this.Person.extendedMixins(), 'name') );
   });
 
   /*###############################################################################################*/
