@@ -121,6 +121,14 @@
     );
   });
 
+  QUnit.test( 'should store all included mixins', function( assert ) {
+    var person, mixins = [{bar: 'bar'}, {foo: 'foo'}, {baz: 'baz'}];
+
+    _.includeIn(this.Person, mixins);
+
+    assert.deepEqual(this.Person.includedMixins(), mixins);
+    assert.deepEqual(this.Person.extendedMixins(), []);
+  });
 
   /*###############################################################################################*/
 
@@ -173,6 +181,15 @@
       },
       '_.extendIn: all mixins must be objects.'
     );
+  });
+
+  QUnit.test( 'should store all extended mixins', function( assert ) {
+    var person, mixins = [{bar: 'bar'}, {foo: 'foo'}, {baz: 'baz'}];
+
+    _.extendIn(this.Person, mixins);
+
+    assert.deepEqual(this.Person.extendedMixins(), mixins);
+    assert.deepEqual(this.Person.includedMixins(), []);
   });
 
   /*###############################################################################################*/
