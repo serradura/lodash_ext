@@ -8,42 +8,59 @@
         fn:     _.isFunction,
         mixin:  _.isObject,
         object: _.isObject
-      }
+      };
 
-  function validationErrorFor(errorType, scope) {
-    return '_.' + scope + 'In: ' + validationErrors[errorType];
+  function validationErrorFor(errorType, strategy) {
+    return '_.' + strategy + 'In: ' + validationErrors[errorType];
   }
 
-  function valid(errorType, scope, target) {
+  function valid(errorType, strategy, target) {
     var isValid = validationStrategies[errorType];
 
-    if( !isValid(target) ) throw validationErrorFor(errorType, scope);
+    if( !isValid(target) ) throw validationErrorFor(errorType, strategy);
 
     return target;
   };
 
-  function mixinsFor(scope, mixin) {
+  function addMixinsWith(strategy, target, mixins) {
+    var keys = {include: 'included', extend: 'extended'};
+
+    target['_' + keys[strategy] + 'Mixins'] = mixins;
+  };
+
+  function addMixinsHelpers(target) {
+    target.includedMixins = function() { return this._includedMixins || []; };
+    target.extendedMixins = function() { return this._extendedMixins || []; };
+  }
+
+  function mixinsFor(strategy, mixin) {
     var mixins = _.isArray(mixin) ? mixin : [mixin];
 
-    return _.map(mixins, function(mixin) { return valid('mixin', scope, mixin) });
+    return _.map(mixins, function(mixin) { return valid('mixin', strategy, mixin) });
   };
 
-  function extended(target, mixins) {
-    _.each(mixins, function(mixin) { _.extend(target, mixin); });
+  function handledWith(strategy, target, mixin, object) {
+    var container = (object || target),
+        mixins    = mixinsFor(strategy, mixin);
 
-    return target;
+    addMixinsWith(strategy, target, mixins);
+    addMixinsHelpers(target);
+
+    _.each(mixins, function(mixin) { _.extend(container, mixin); });
+
+    return container;
   };
 
-  function extendIn(target, mixins) {
-    var fn = valid('fn', 'extend', target);
+  function extendIn(target, mixin) {
+    valid('fn', 'extend', target);
 
-    return extended(fn, mixinsFor('extend', mixins));
+    return handledWith('extend', target, mixin);
   };
 
-  function includeIn(target, mixins) {
+  function includeIn(target, mixin) {
     var object = valid('object', 'include', target.prototype || target);
 
-    return extended(object, mixinsFor('include', mixins));
+    return handledWith('include', target, mixin, object);
   };
 
   _.mixin({
