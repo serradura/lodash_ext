@@ -4,10 +4,16 @@
         mixin:  'all mixins must be objects.',
         object: 'target must be a constuctor or an object.',
       },
+
       validationStrategies = {
         fn:     _.isFunction,
         mixin:  _.isObject,
         object: _.isObject
+      },
+
+      cbKeys = {
+        include: 'included',
+        extend: 'extended'
       };
 
   function validationErrorFor(errorType, strategy) {
@@ -22,16 +28,18 @@
     return target;
   };
 
-  function addMixinsWith(strategy, target, mixins) {
-    var keys = {include: 'included', extend: 'extended'};
-
-    target['_' + keys[strategy] + 'Mixins'] = mixins;
-  };
-
-  function addMixinsHelpers(target) {
+  function addMixinsHelpers(strategy, target, mixins) {
     target.includedMixins = function() { return this._includedMixins || []; };
     target.extendedMixins = function() { return this._extendedMixins || []; };
-  }
+
+    target['_' + cbKeys[strategy] + 'Mixins'] = mixins;
+  };
+
+  function mixinCbOf(strategy, target, mixin) {
+    var fn = mixin[cbKeys[strategy]];
+
+    if( _.isFunction(fn) ) fn(target, mixin);
+  };
 
   function mixinsFor(strategy, mixin) {
     var mixins = _.isArray(mixin) ? mixin : [mixin];
@@ -43,10 +51,12 @@
     var container = (object || target),
         mixins    = mixinsFor(strategy, mixin);
 
-    addMixinsWith(strategy, target, mixins);
-    addMixinsHelpers(target);
+    addMixinsHelpers(strategy, target, mixins);
 
-    _.each(mixins, function(mixin) { _.extend(container, mixin); });
+    _.each(mixins, function(currentMixin) {
+      _.extend(container, currentMixin);
+      mixinCbOf(strategy, target, currentMixin);
+    });
 
     return container;
   };
