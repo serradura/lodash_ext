@@ -23,7 +23,7 @@
     return '_.' + strategy + 'In: ' + validations[errorType]['error'];
   }
 
-  function validStrategys(errorType, strategy, target) {
+  function validStrategy(errorType, strategy, target) {
     var isValid = validations[errorType]['strategy'];
 
     if( !isValid(target) ) throw validationErrorFor(errorType, strategy);

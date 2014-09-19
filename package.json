@@ -1,0 +1,27 @@
+{
+  "name": "lodash_ext",
+  "version": "1.0.0",
+  "description": "lodash.js / underscore.js extensions",
+  "main": "fetch.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/serradura/lodash_ext.git"
+  },
+  "author": "Serradura",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/serradura/lodash_ext/issues"
+  },
+  "homepage": "https://github.com/serradura/lodash_ext",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-concat": "^0.5.0",
+    "grunt-contrib-uglify": "^0.6.0"
+  }
+}
