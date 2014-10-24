@@ -46,6 +46,8 @@
   QUnit.module( '_.fetch' );
 
   QUnit.test( 'should plucks a property value of a given object', function( assert ) {
+    var defaultValue;
+
     assert.ok( _.has(_.fetch(object, 'a')  , 'b') );
     assert.ok( _.has(_.fetch(object, 'a.b'), 'c') );
 
@@ -56,6 +58,17 @@
     assert.strictEqual( _.fetch(object, 'a.b.d.1.e'), 2 );
 
     assert.ok( _.fetch(object, 'z', 'defaultValue'), 'defaultValue' );
+
+    defaultValue = [];
+    assert.equal( _.fetch({}, 'foo', defaultValue), defaultValue );
+
+    defaultValue = {};
+    assert.equal( _.fetch({}, 'foo', defaultValue), defaultValue );
+
+    assert.strictEqual( _.fetch({}, 'foo', 0), 0 );
+    assert.strictEqual( _.fetch({}, 'foo', null), null );
+    assert.strictEqual( _.fetch({}, 'foo', false), false );
+    assert.strictEqual( _.fetch({}, 'foo', undefined), undefined );
 
     assert.throws(
       function() {

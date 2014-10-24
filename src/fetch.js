@@ -39,7 +39,7 @@
     var queryParts = init(object, query, 'fetch'),
         data       = getData(object, queryParts);
 
-    if(!data && !defaultData) {
+    if(!data && arguments.length < 3) {
       throw '_.fetch: key not found: ' + query;
     } else {
       return data ? data : defaultData;
